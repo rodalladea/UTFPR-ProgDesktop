@@ -5,20 +5,18 @@
  */
 package model;
 
-import java.util.Date;
-
 /**
  *
  * @author rodrigo
  */
-public class Aluno extends Usuario {
-    private String ra;
+public class Servidor extends Usuario {
+    private String siape;
 
-    public String getRa() {
-        return ra;
+    public String getSiape() {
+        return siape;
     }
 
-    public void setRa(String ra) {
-        this.ra = ra;
+    public void setSiape(String siape) {
+        this.siape = siape;
     }
 }
