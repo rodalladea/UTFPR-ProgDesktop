@@ -16,6 +16,7 @@ public class GUI_Creditos extends javax.swing.JFrame {
      */
     public GUI_Creditos() {
         initComponents();
+        this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     }
 
     /**

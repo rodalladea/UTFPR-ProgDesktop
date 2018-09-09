@@ -16,6 +16,7 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
      */
     public GUI_Refeicoes() {
         initComponents();
+        this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     }
 
     /**
