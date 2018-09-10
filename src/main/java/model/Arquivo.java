@@ -17,7 +17,7 @@ import java.io.IOException;
  * @author rodrigo
  */
 public class Arquivo {
-    public static void GravarTexto(File diretorio, File arquivo, String dado) {
+    public static void setTexto(File diretorio, File arquivo, String dado) {
         try {
             String[] arquivos = diretorio.list();
             
@@ -33,7 +33,7 @@ public class Arquivo {
         }
     }
 
-    public static String LerTexto(File arquivo) {
+    public static String getTexto(File arquivo) {
         try {
             FileReader leitor = new FileReader(arquivo);
             BufferedReader leitorbuffer = new BufferedReader(leitor);
@@ -41,12 +41,17 @@ public class Arquivo {
             
             while (leitorbuffer.ready()) {
                 stringDados.append(leitorbuffer.readLine());
+                stringDados.append("\n");
             }
             leitor.close();
             leitorbuffer.close();
+            
+            return stringDados.toString();
         } catch (IOException erro) {
             System.err.println("Erro ao ler arquivo. " + erro);
         }
+        
+        return null;
     }
     
     public static File getArquivo(String diretorio, String arquivo) {
