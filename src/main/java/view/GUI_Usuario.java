@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.Aluno;
 import model.AlunoDAO;
@@ -94,11 +95,11 @@ public class GUI_Usuario extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Nome", "RA"
+                "ID", "Nome", "RA"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -109,6 +110,7 @@ public class GUI_Usuario extends javax.swing.JFrame {
         if (jTableAluno.getColumnModel().getColumnCount() > 0) {
             jTableAluno.getColumnModel().getColumn(0).setResizable(false);
             jTableAluno.getColumnModel().getColumn(1).setResizable(false);
+            jTableAluno.getColumnModel().getColumn(2).setResizable(false);
         }
 
         jButton5.setText("Excluir");
@@ -362,6 +364,7 @@ public class GUI_Usuario extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         Aluno aluno = new Aluno();
+        int id;
         AlunoDAO alunoDao = new AlunoDAO();
         ArrayList<Aluno> listAluno = new ArrayList();
         try {
@@ -370,15 +373,13 @@ public class GUI_Usuario extends javax.swing.JFrame {
             Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        for(int i = 0; i < listAluno.size(); i++) {
-            
+        if(listAluno.size() != 0) {
+            id = listAluno.get(listAluno.size()-1).getId()+1;
+        } else {
+            id = 0;
         }
 
-        try {
-            aluno.setId(alunoDao.getListAluno().size());
-        } catch (IOException ex) {
-            Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        aluno.setId(id);
         aluno.setNome(jTextFieldNomeAluno.getText());
         aluno.setRa(jTextFieldRaAluno.getText());
         aluno.setSenha(jTextFieldSenhaAluno.getText());
@@ -393,20 +394,35 @@ public class GUI_Usuario extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        int row = jTableAluno.getSelectedRow();
-        int column = jTableAluno.getSelectedColumn();
+        if(jTableAluno.getSelectedRow() != -1){
+            int id = Integer.parseInt(jTableAluno.getModel().getValueAt(jTableAluno.getSelectedRow(), 0).toString());
+            
+            AlunoDAO aDao = new AlunoDAO();
+            try {
+                aDao.deleteAluno(id);
+            } catch (IOException ex) {
+                Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                startTable();
+            } catch (IOException ex) {
+                Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Selecione uma linha da tabela");
+        }
         
-        String id = jTableAluno.getValueAt(row, column);
     }//GEN-LAST:event_jButton5ActionPerformed
     
     private void startTable() throws IOException {
         table = (DefaultTableModel) jTableAluno.getModel();
         table.setRowCount(0);
-        Aluno a = new Aluno();
+        
         AlunoDAO aDao = new AlunoDAO();
         ArrayList<Aluno> listAluno = aDao.getListAluno();
 
         for(int posicaoLinha=0; posicaoLinha<listAluno.size(); posicaoLinha++){
+            Aluno a = new Aluno();
             
             a.setId(listAluno.get(posicaoLinha).getId());
             a.setNome(listAluno.get(posicaoLinha).getNome());
@@ -414,7 +430,7 @@ public class GUI_Usuario extends javax.swing.JFrame {
             a.setSenha(listAluno.get(posicaoLinha).getSenha());
             a.setQtdCreditos(listAluno.get(posicaoLinha).getQtdCreditos());
             
-            table.insertRow(posicaoLinha, new Object[]{a.getNome(),a.getRa()});
+            table.insertRow(posicaoLinha, new Object[]{a.getId(), a.getNome(),a.getRa()});
         }
     }
     /**

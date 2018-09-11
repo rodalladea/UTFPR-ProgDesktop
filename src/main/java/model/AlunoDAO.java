@@ -58,30 +58,31 @@ public class AlunoDAO {
                 
                 if(aux == 0 && charDado[i] == ',') {
                     aluno.setId(Integer.parseInt(stringDados.toString()));
-                    System.out.println(stringDados.toString());
+                    
                     stringDados.delete(0, stringDados.length());
                     aux++;
                 } else if(aux == 1 && charDado[i] == ',') {
                     aluno.setNome(stringDados.toString());
-                    System.out.println(stringDados.toString());
+                    
                     stringDados.delete(0, stringDados.length());
                     aux++;
                 } else if(aux == 2 && charDado[i] == ',') {
                     aluno.setRa(stringDados.toString());
-                    System.out.println(stringDados.toString());
+                    
                     stringDados.delete(0, stringDados.length());
                     aux++;
                 } else if(aux == 3 && charDado[i] == ',') {
                     aluno.setSenha(stringDados.toString());
-                    System.out.println(stringDados.toString());
+                    
                     stringDados.delete(0, stringDados.length());
                     aux++;
                 } else if(aux == 4 && charDado[i] == '\n') {
                     aluno.setQtdCreditos(Integer.parseInt(stringDados.toString()));
-                    System.out.println(stringDados.toString());
+                    
                     stringDados.delete(0, stringDados.length());
                     aux = 0;
                     listAluno.add(aluno);
+                    aluno = new Aluno();
                 }
                 
                 if(charDado[i] != ',' && charDado[i] != '\n') {
@@ -94,7 +95,8 @@ public class AlunoDAO {
     }
     
     public void deleteAluno(int id) throws IOException {
-
+        String dir = "/home/rodrigo/Documentos/RU2.0/";
+        String arq = "aluno.txt";
         ArrayList<Aluno> listAluno = getListAluno();
         
         for(int i = 0; i < listAluno.size(); i++) {
@@ -103,9 +105,15 @@ public class AlunoDAO {
                 break;
             }
         }
+        
+        if(!listAluno.isEmpty()) {
+            insertAluno(listAluno.get(0), false);
 
-        for(int j = 0; j < listAluno.size(); j++) {
-            insertAluno(listAluno.get(j), false);
+            for(int j = 1; j < listAluno.size(); j++) {
+                insertAluno(listAluno.get(j), true);
+            }
+        } else {
+            Arquivo.setTexto(new File(dir), new File(arq), " ", false);
         }
     }
     
