@@ -7,6 +7,7 @@ package model;
 
 import java.awt.List;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
@@ -37,7 +38,7 @@ public class AlunoDAO {
         Arquivo.setTexto(new File(dir), arquivo, stringDado.toString(), escreve);
     }
     
-    public ArrayList<Aluno> getListAluno() {
+    public ArrayList<Aluno> getListAluno() throws IOException {
         String dir = "/home/rodrigo/Documentos/RU2.0/";
         String arq = "aluno.txt";
         StringBuilder stringDados = new StringBuilder();
@@ -47,35 +48,37 @@ public class AlunoDAO {
         int aux = 0;
         
         File arquivo = Arquivo.getArquivo(dir, arq);
-        if (dir.mkdir()) {
-            System.out.println("diretorio principal criado.");
-        } else {
-            System.out.println("diretorio principal nao foi criado.");
-        }
+        
         stringDado = Arquivo.getTexto(arquivo);
         
-        if(!stringDado.equals(null)) {
+        
             char[] charDado = stringDado.toCharArray();
             
             for(int i = 0; i < charDado.length; i++) {
+                
                 if(aux == 0 && charDado[i] == ',') {
                     aluno.setId(Integer.parseInt(stringDados.toString()));
+                    System.out.println(stringDados.toString());
                     stringDados.delete(0, stringDados.length());
                     aux++;
                 } else if(aux == 1 && charDado[i] == ',') {
                     aluno.setNome(stringDados.toString());
+                    System.out.println(stringDados.toString());
                     stringDados.delete(0, stringDados.length());
                     aux++;
                 } else if(aux == 2 && charDado[i] == ',') {
                     aluno.setRa(stringDados.toString());
+                    System.out.println(stringDados.toString());
                     stringDados.delete(0, stringDados.length());
                     aux++;
                 } else if(aux == 3 && charDado[i] == ',') {
                     aluno.setSenha(stringDados.toString());
+                    System.out.println(stringDados.toString());
                     stringDados.delete(0, stringDados.length());
                     aux++;
-                } else if(aux == 3 && charDado[i] == '\n') {
+                } else if(aux == 4 && charDado[i] == '\n') {
                     aluno.setQtdCreditos(Integer.parseInt(stringDados.toString()));
+                    System.out.println(stringDados.toString());
                     stringDados.delete(0, stringDados.length());
                     aux = 0;
                     listAluno.add(aluno);
@@ -85,14 +88,12 @@ public class AlunoDAO {
                     stringDados.append(charDado[i]);
                 }
             }
-        } else {
-            JOptionPane.showMessageDialog(null, "Erro ao obter lista de alunos");
-        }
+        
         
         return listAluno;
     }
     
-    public void deleteAluno(int id) {
+    public void deleteAluno(int id) throws IOException {
 
         ArrayList<Aluno> listAluno = getListAluno();
         
@@ -108,7 +109,7 @@ public class AlunoDAO {
         }
     }
     
-    public void updateAluno(Aluno aluno) {
+    public void updateAluno(Aluno aluno) throws IOException {
         ArrayList<Aluno> listAluno = getListAluno();
         
         for(int i = 0; i < listAluno.size(); i++) {

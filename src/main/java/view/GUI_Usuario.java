@@ -5,7 +5,11 @@
  */
 package view;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 import model.Aluno;
 import model.AlunoDAO;
 
@@ -14,13 +18,14 @@ import model.AlunoDAO;
  * @author Renan Rodrigues
  */
 public class GUI_Usuario extends javax.swing.JFrame {
-
+    DefaultTableModel table = new DefaultTableModel();
     /**
      * Creates new form CRUD_Aluno
      */
-    public GUI_Usuario() {
+    public GUI_Usuario() throws IOException {
         initComponents();
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        startTable();
     }
 
     /**
@@ -42,7 +47,7 @@ public class GUI_Usuario extends javax.swing.JFrame {
         jTextFieldRaAluno = new javax.swing.JTextField();
         jButton4 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        jTableAluno = new javax.swing.JTable();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
@@ -84,7 +89,7 @@ public class GUI_Usuario extends javax.swing.JFrame {
             }
         });
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        jTableAluno.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -100,13 +105,18 @@ public class GUI_Usuario extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(jTable2);
-        if (jTable2.getColumnModel().getColumnCount() > 0) {
-            jTable2.getColumnModel().getColumn(0).setResizable(false);
-            jTable2.getColumnModel().getColumn(1).setResizable(false);
+        jScrollPane2.setViewportView(jTableAluno);
+        if (jTableAluno.getColumnModel().getColumnCount() > 0) {
+            jTableAluno.getColumnModel().getColumn(0).setResizable(false);
+            jTableAluno.getColumnModel().getColumn(1).setResizable(false);
         }
 
         jButton5.setText("Excluir");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         jButton6.setText("Atualizar");
 
@@ -354,18 +364,59 @@ public class GUI_Usuario extends javax.swing.JFrame {
         Aluno aluno = new Aluno();
         AlunoDAO alunoDao = new AlunoDAO();
         ArrayList<Aluno> listAluno = new ArrayList();
+        try {
+            listAluno = alunoDao.getListAluno();
+        } catch (IOException ex) {
+            Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
-        if(alunoDao.getListAluno)
-        
-        aluno.setId(alunoDao.getListAluno().size());
+        for(int i = 0; i < listAluno.size(); i++) {
+            
+        }
+
+        try {
+            aluno.setId(alunoDao.getListAluno().size());
+        } catch (IOException ex) {
+            Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
         aluno.setNome(jTextFieldNomeAluno.getText());
         aluno.setRa(jTextFieldRaAluno.getText());
         aluno.setSenha(jTextFieldSenhaAluno.getText());
         aluno.setQtdCreditos(0);
         
         alunoDao.insertAluno(aluno, true);
+        try {
+            startTable();
+        } catch (IOException ex) {
+            Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        int row = jTableAluno.getSelectedRow();
+        int column = jTableAluno.getSelectedColumn();
+        
+        String id = jTableAluno.getValueAt(row, column);
+    }//GEN-LAST:event_jButton5ActionPerformed
+    
+    private void startTable() throws IOException {
+        table = (DefaultTableModel) jTableAluno.getModel();
+        table.setRowCount(0);
+        Aluno a = new Aluno();
+        AlunoDAO aDao = new AlunoDAO();
+        ArrayList<Aluno> listAluno = aDao.getListAluno();
+
+        for(int posicaoLinha=0; posicaoLinha<listAluno.size(); posicaoLinha++){
+            
+            a.setId(listAluno.get(posicaoLinha).getId());
+            a.setNome(listAluno.get(posicaoLinha).getNome());
+            a.setRa(listAluno.get(posicaoLinha).getRa());
+            a.setSenha(listAluno.get(posicaoLinha).getSenha());
+            a.setQtdCreditos(listAluno.get(posicaoLinha).getQtdCreditos());
+            
+            table.insertRow(posicaoLinha, new Object[]{a.getNome(),a.getRa()});
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -403,7 +454,11 @@ public class GUI_Usuario extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new GUI_Usuario().setVisible(true);
+                try {
+                    new GUI_Usuario().setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -433,9 +488,9 @@ public class GUI_Usuario extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
     private javax.swing.JTable jTable4;
+    private javax.swing.JTable jTableAluno;
     private javax.swing.JTextField jTextField11;
     private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;

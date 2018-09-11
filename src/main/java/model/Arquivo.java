@@ -8,6 +8,7 @@ package model;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,39 +20,30 @@ import java.io.IOException;
 public class Arquivo {
     public static void setTexto(File diretorio, File arquivo, String dado, boolean escrita) {
         try {
-            String[] arquivos = diretorio.list();
-            
-            FileWriter escritor = new FileWriter(arquivo, escrita);
-            BufferedWriter escritorBuffer = new BufferedWriter(escritor);
-            
-            escritorBuffer.write(dado);
-            
-            escritor.close();
-            escritorBuffer.close();
+            BufferedWriter escritorbuffer = new BufferedWriter(new FileWriter(arquivo, escrita));
+            escritorbuffer.write(dado + "\n");
+            escritorbuffer.close();
         } catch (IOException erro) {
             System.err.println("Erro na escrita do arquivo. " + erro);
         }
     }
 
-    public static String getTexto(File arquivo) {
+    public static String getTexto(File arquivo) throws FileNotFoundException, IOException {
+        
+        StringBuilder str = new StringBuilder();
         try {
-            FileReader leitor = new FileReader(arquivo);
-            BufferedReader leitorbuffer = new BufferedReader(leitor);
-            StringBuilder stringDados = new StringBuilder();
-            
+            BufferedReader leitorbuffer = new BufferedReader(
+                    new FileReader(arquivo));
             while (leitorbuffer.ready()) {
-                stringDados.append(leitorbuffer.readLine());
-                stringDados.append("\n");
+                str.append(leitorbuffer.readLine()).append("\n");
             }
-            leitor.close();
             leitorbuffer.close();
-            
-            return stringDados.toString();
         } catch (IOException erro) {
-            System.err.println("Erro ao ler arquivo. " + erro);
+            System.err.println("Erro na leitura do arquivo. " + erro);
+        } finally {
+            return str.toString();
         }
         
-        return null;
     }
     
     public static File getArquivo(String diretorio, String arquivo) {
