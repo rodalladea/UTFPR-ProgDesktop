@@ -97,6 +97,7 @@ public class AlunoDAO {
     public void deleteAluno(int id) throws IOException {
         String dir = "/home/rodrigo/Documentos/RU2.0/";
         String arq = "aluno.txt";
+        File arquivo = Arquivo.getArquivo(dir, arq);
         ArrayList<Aluno> listAluno = getListAluno();
         
         for(int i = 0; i < listAluno.size(); i++) {
@@ -113,7 +114,7 @@ public class AlunoDAO {
                 insertAluno(listAluno.get(j), true);
             }
         } else {
-            Arquivo.setTexto(new File(dir), new File(arq), " ", false);
+            Arquivo.apagaArquivo(arquivo);
         }
     }
     
@@ -127,7 +128,7 @@ public class AlunoDAO {
         }
         
         for(int j = 0; j < listAluno.size(); j++) {
-            insertAluno(listAluno.get(j), false);
+            insertAluno(listAluno.get(j), true);
         }
     }
 }

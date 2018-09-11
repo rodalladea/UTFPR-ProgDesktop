@@ -48,6 +48,10 @@ public class Arquivo {
         
     }
     
+    public static void apagaArquivo(File arquivo) {
+        arquivo.delete();
+    }
+    
     public static File getArquivo(String diretorio, String arquivo) {
         File dir = new File(diretorio);
         dir.mkdir();

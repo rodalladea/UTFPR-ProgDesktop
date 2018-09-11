@@ -20,6 +20,7 @@ import model.AlunoDAO;
  */
 public class GUI_Usuario extends javax.swing.JFrame {
     DefaultTableModel table = new DefaultTableModel();
+    int id;
     /**
      * Creates new form CRUD_Aluno
      */
@@ -106,6 +107,11 @@ public class GUI_Usuario extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTableAluno.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableAlunoMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTableAluno);
         if (jTableAluno.getColumnModel().getColumnCount() > 0) {
             jTableAluno.getColumnModel().getColumn(0).setResizable(false);
@@ -121,6 +127,11 @@ public class GUI_Usuario extends javax.swing.JFrame {
         });
 
         jButton6.setText("Atualizar");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -413,6 +424,53 @@ public class GUI_Usuario extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jTableAlunoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableAlunoMouseClicked
+        AlunoDAO aDao = new AlunoDAO();
+        Aluno aluno = new Aluno();
+        ArrayList<Aluno> listAluno = new ArrayList();
+        id = Integer.parseInt(jTableAluno.getModel().getValueAt(jTableAluno.getSelectedRow(), 0).toString());
+        
+        jTextFieldNomeAluno.setText(jTableAluno.getModel().getValueAt(jTableAluno.getSelectedRow(), 1).toString());
+        jTextFieldRaAluno.setText(jTableAluno.getModel().getValueAt(jTableAluno.getSelectedRow(), 2).toString());
+        
+        
+        try {
+            listAluno = aDao.getListAluno();
+        } catch (IOException ex) {
+            Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        for(int i = 0; i < listAluno.size(); i++) {
+            if(id == listAluno.get(i).getId()) {
+                jTextFieldSenhaAluno.setText(listAluno.get(i).getSenha());
+                break;
+            }
+        }
+    }//GEN-LAST:event_jTableAlunoMouseClicked
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        Aluno aluno = new Aluno();
+        AlunoDAO aDao = new AlunoDAO();
+        
+        aluno.setId(id);
+        aluno.setNome(jTextFieldNomeAluno.getText());
+        aluno.setRa(jTextFieldRaAluno.getText());
+        aluno.setSenha(jTextFieldSenhaAluno.getText());
+        aluno.setQtdCreditos(0);
+        
+        try {
+            aDao.updateAluno(aluno);
+        } catch (IOException ex) {
+            Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try {
+            startTable();
+        } catch (IOException ex) {
+            Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton6ActionPerformed
     
     private void startTable() throws IOException {
         table = (DefaultTableModel) jTableAluno.getModel();
