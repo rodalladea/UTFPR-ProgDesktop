@@ -17,11 +17,11 @@ import java.io.IOException;
  * @author rodrigo
  */
 public class Arquivo {
-    public static void setTexto(File diretorio, File arquivo, String dado) {
+    public static void setTexto(File diretorio, File arquivo, String dado, boolean escrita) {
         try {
             String[] arquivos = diretorio.list();
             
-            FileWriter escritor = new FileWriter(arquivo, true);
+            FileWriter escritor = new FileWriter(arquivo, escrita);
             BufferedWriter escritorBuffer = new BufferedWriter(escritor);
             
             escritorBuffer.write(dado);

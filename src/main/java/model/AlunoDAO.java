@@ -16,9 +16,9 @@ import javax.swing.JOptionPane;
  * @author Renan Rodrigues
  */
 public class AlunoDAO {
-    private void insertAluno(Aluno aluno) {
+    public void insertAluno(Aluno aluno, boolean escreve) {
         
-        String dir = "home/rodrigo/Documentos/";
+        String dir = "/home/rodrigo/Documentos/RU2.0/";
         String arq = "aluno.txt";
         StringBuilder stringDado = new StringBuilder();
         
@@ -34,11 +34,11 @@ public class AlunoDAO {
                 .append(",")
                 .append(aluno.getQtdCreditos());
         
-        Arquivo.setTexto(new File(dir), arquivo, stringDado.toString());
+        Arquivo.setTexto(new File(dir), arquivo, stringDado.toString(), escreve);
     }
     
-    private ArrayList<Aluno> getListAluno() {
-        String dir = "home/rodrigo/Documentos/";
+    public ArrayList<Aluno> getListAluno() {
+        String dir = "/home/rodrigo/Documentos/RU2.0/";
         String arq = "aluno.txt";
         StringBuilder stringDados = new StringBuilder();
         ArrayList<Aluno> listAluno = new ArrayList<>();
@@ -47,7 +47,11 @@ public class AlunoDAO {
         int aux = 0;
         
         File arquivo = Arquivo.getArquivo(dir, arq);
-        
+        if (dir.mkdir()) {
+            System.out.println("diretorio principal criado.");
+        } else {
+            System.out.println("diretorio principal nao foi criado.");
+        }
         stringDado = Arquivo.getTexto(arquivo);
         
         if(!stringDado.equals(null)) {
@@ -86,5 +90,35 @@ public class AlunoDAO {
         }
         
         return listAluno;
+    }
+    
+    public void deleteAluno(int id) {
+
+        ArrayList<Aluno> listAluno = getListAluno();
+        
+        for(int i = 0; i < listAluno.size(); i++) {
+            if(id == listAluno.get(i).getId()) {
+                listAluno.remove(i);
+                break;
+            }
+        }
+
+        for(int j = 0; j < listAluno.size(); j++) {
+            insertAluno(listAluno.get(j), false);
+        }
+    }
+    
+    public void updateAluno(Aluno aluno) {
+        ArrayList<Aluno> listAluno = getListAluno();
+        
+        for(int i = 0; i < listAluno.size(); i++) {
+            if(aluno.getId() == listAluno.get(i).getId()) {
+                listAluno.set(i, aluno);
+            }
+        }
+        
+        for(int j = 0; j < listAluno.size(); j++) {
+            insertAluno(listAluno.get(j), false);
+        }
     }
 }
