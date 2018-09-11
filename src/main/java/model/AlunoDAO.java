@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
 public class AlunoDAO {
     public void insertAluno(Aluno aluno, boolean escreve) {
         
-        String dir = "/home/user/Documentos/RU2.0/";
+        String dir = "/home/rodrigo/Documentos/RU2.0/";
         String arq = "aluno.txt";
         StringBuilder stringDado = new StringBuilder();
         
@@ -39,7 +39,7 @@ public class AlunoDAO {
     }
     
     public ArrayList<Aluno> getListAluno() throws IOException {
-        String dir = "/home/user/Documentos/RU2.0/";
+        String dir = "/home/rodrigo/Documentos/RU2.0/";
         String arq = "aluno.txt";
         StringBuilder stringDados = new StringBuilder();
         ArrayList<Aluno> listAluno = new ArrayList<>();
@@ -127,7 +127,9 @@ public class AlunoDAO {
             }
         }
         
-        for(int j = 0; j < listAluno.size(); j++) {
+        insertAluno(listAluno.get(0), false);
+        
+        for(int j = 1; j < listAluno.size(); j++) {
             insertAluno(listAluno.get(j), true);
         }
     }
