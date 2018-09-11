@@ -31,12 +31,12 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
-        jTable5 = new javax.swing.JTable();
+        jTableRefeicao = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
         jScrollPane6 = new javax.swing.JScrollPane();
-        jTable6 = new javax.swing.JTable();
+        jTableAlunos = new javax.swing.JTable();
         jButton4 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
@@ -59,7 +59,7 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable5.setModel(new javax.swing.table.DefaultTableModel(
+        jTableRefeicao.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -75,9 +75,9 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane5.setViewportView(jTable5);
-        if (jTable5.getColumnModel().getColumnCount() > 0) {
-            jTable5.getColumnModel().getColumn(0).setResizable(false);
+        jScrollPane5.setViewportView(jTableRefeicao);
+        if (jTableRefeicao.getColumnModel().getColumnCount() > 0) {
+            jTableRefeicao.getColumnModel().getColumn(0).setResizable(false);
         }
 
         jLabel5.setText("Refeições");
@@ -86,7 +86,7 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
 
         jButton3.setText("Excluir Refeição");
 
-        jTable6.setModel(new javax.swing.table.DefaultTableModel(
+        jTableAlunos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -102,9 +102,9 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane6.setViewportView(jTable6);
-        if (jTable6.getColumnModel().getColumnCount() > 0) {
-            jTable6.getColumnModel().getColumn(0).setResizable(false);
+        jScrollPane6.setViewportView(jTableAlunos);
+        if (jTableAlunos.getColumnModel().getColumnCount() > 0) {
+            jTableAlunos.getColumnModel().getColumn(0).setResizable(false);
         }
 
         jButton4.setText("Adicionar Refeição");
@@ -405,10 +405,10 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable10;
-    private javax.swing.JTable jTable5;
-    private javax.swing.JTable jTable6;
     private javax.swing.JTable jTable7;
     private javax.swing.JTable jTable8;
     private javax.swing.JTable jTable9;
+    private javax.swing.JTable jTableAlunos;
+    private javax.swing.JTable jTableRefeicao;
     // End of variables declaration//GEN-END:variables
 }
