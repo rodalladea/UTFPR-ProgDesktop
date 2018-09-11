@@ -5,18 +5,29 @@
  */
 package view;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import model.Aluno;
+import model.AlunoDAO;
+
 /**
  *
  * @author Renan Rodrigues
  */
 public class GUI_Creditos extends javax.swing.JFrame {
-
+    ArrayList<Aluno> listAluno;
+    DefaultTableModel table = new DefaultTableModel();
     /**
      * Creates new form CRUD_Creditos
      */
-    public GUI_Creditos() {
+    public GUI_Creditos() throws IOException {
         initComponents();
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        startTable();
     }
 
     /**
@@ -31,9 +42,9 @@ public class GUI_Creditos extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        jTableAluno = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        jTextFieldCreditos = new javax.swing.JTextField();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
@@ -53,7 +64,7 @@ public class GUI_Creditos extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        jTableAluno.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -69,15 +80,20 @@ public class GUI_Creditos extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane3.setViewportView(jTable3);
-        if (jTable3.getColumnModel().getColumnCount() > 0) {
-            jTable3.getColumnModel().getColumn(0).setResizable(false);
-            jTable3.getColumnModel().getColumn(1).setResizable(false);
+        jScrollPane3.setViewportView(jTableAluno);
+        if (jTableAluno.getColumnModel().getColumnCount() > 0) {
+            jTableAluno.getColumnModel().getColumn(0).setResizable(false);
+            jTableAluno.getColumnModel().getColumn(1).setResizable(false);
         }
 
         jLabel3.setText("Quantidade de Créditos:");
 
         jButton5.setText("Adicionar");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         jButton6.setText("Excluir");
 
@@ -93,7 +109,7 @@ public class GUI_Creditos extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextFieldCreditos, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -107,7 +123,7 @@ public class GUI_Creditos extends javax.swing.JFrame {
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldCreditos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(jButton5)
                     .addComponent(jButton6))
@@ -256,6 +272,37 @@ public class GUI_Creditos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+       if(jTableAluno.getSelectedRow() != -1){
+            int selecao = jTableAluno.getSelectedRow();
+             Aluno aluno = null;
+            if(selecao != -1){
+                aluno = this.listAluno.get(selecao);
+            }else{
+                JOptionPane.showMessageDialog(this, "Seleciona uma linha");
+            }
+            System.out.println(aluno.getNome());
+            int creditosNovo=Integer.parseInt(jTextFieldCreditos.getText());
+            
+            aluno.setQtdCreditos(aluno.getQtdCreditos() + creditosNovo);
+            
+           try {
+               (new AlunoDAO()).updateAluno(aluno);
+           } catch (IOException ex) {
+               Logger.getLogger(GUI_Creditos.class.getName()).log(Level.SEVERE, null, ex);
+           }
+            
+            
+            try {
+                startTable();
+            } catch (IOException ex) {
+                Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Selecione uma linha da tabela");
+        }
+    }//GEN-LAST:event_jButton5ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -287,9 +334,33 @@ public class GUI_Creditos extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new GUI_Creditos().setVisible(true);
+                try {
+                    new GUI_Creditos().setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(GUI_Creditos.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
+    }
+    
+    private void startTable() throws IOException {
+        table = (DefaultTableModel) jTableAluno.getModel();
+        table.setRowCount(0);
+        
+        AlunoDAO aDao = new AlunoDAO();
+        this.listAluno = aDao.getListAluno();
+
+        for(int posicaoLinha=0; posicaoLinha<listAluno.size(); posicaoLinha++){
+            Aluno a = new Aluno();
+            
+            a.setId(listAluno.get(posicaoLinha).getId());
+            a.setNome(listAluno.get(posicaoLinha).getNome());
+            a.setRa(listAluno.get(posicaoLinha).getRa());
+            a.setSenha(listAluno.get(posicaoLinha).getSenha());
+            a.setQtdCreditos(listAluno.get(posicaoLinha).getQtdCreditos());
+            
+            table.insertRow(posicaoLinha, new Object[]{ a.getNome(),a.getQtdCreditos()});
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -311,9 +382,9 @@ public class GUI_Creditos extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
+    private javax.swing.JTable jTableAluno;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextFieldCreditos;
     // End of variables declaration//GEN-END:variables
 }
