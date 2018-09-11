@@ -5,16 +5,25 @@
  */
 package model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  *
  * @author rodrigo
  */
 public class Refeicao {
+    private int id;
     private int idUsuario;
-    private Date data;
+    private LocalDateTime data;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
     public int getIdUsuario() {
         return idUsuario;
     }
@@ -23,11 +32,11 @@ public class Refeicao {
         this.idUsuario = idUsuario;
     }
 
-    public Date getData() {
+    public LocalDateTime getData() {
         return data;
     }
 
-    public void setData(Date data) {
+    public void setData(LocalDateTime data) {
         this.data = data;
     }
     

@@ -5,18 +5,35 @@
  */
 package view;
 
+import control.AlunoController;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import model.Aluno;
+import model.AlunoDAO;
+import model.Refeicao;
+import model.RefeicaoDAO;
+
 /**
  *
  * @author Renan Rodrigues
  */
 public class GUI_Refeicoes extends javax.swing.JFrame {
-
+    DefaultTableModel table = new DefaultTableModel();
+    DefaultTableModel table2 = new DefaultTableModel();
     /**
      * Creates new form GUI_Refeicoes
      */
-    public GUI_Refeicoes() {
+    public GUI_Refeicoes() throws IOException {
         initComponents();
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        startTableRefeicao();
+        startTableAlunos();
+        
     }
 
     /**
@@ -38,24 +55,6 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
         jScrollPane6 = new javax.swing.JScrollPane();
         jTableAlunos = new javax.swing.JTable();
         jButton4 = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
-        jScrollPane7 = new javax.swing.JScrollPane();
-        jTable7 = new javax.swing.JTable();
-        jLabel8 = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
-        jScrollPane8 = new javax.swing.JScrollPane();
-        jTable8 = new javax.swing.JTable();
-        jButton6 = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
-        jScrollPane9 = new javax.swing.JScrollPane();
-        jTable9 = new javax.swing.JTable();
-        jLabel10 = new javax.swing.JLabel();
-        jButton7 = new javax.swing.JButton();
-        jScrollPane10 = new javax.swing.JScrollPane();
-        jTable10 = new javax.swing.JTable();
-        jButton8 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -64,11 +63,11 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Nome", "Data"
+                "ID", "Nome", "Data"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -78,6 +77,8 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
         jScrollPane5.setViewportView(jTableRefeicao);
         if (jTableRefeicao.getColumnModel().getColumnCount() > 0) {
             jTableRefeicao.getColumnModel().getColumn(0).setResizable(false);
+            jTableRefeicao.getColumnModel().getColumn(1).setResizable(false);
+            jTableRefeicao.getColumnModel().getColumn(2).setResizable(false);
         }
 
         jLabel5.setText("Refeições");
@@ -85,17 +86,22 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
         jLabel6.setText("Alunos");
 
         jButton3.setText("Excluir Refeição");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jTableAlunos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Nome", "Créditos"
+                "ID", "Nome", "Créditos"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -105,9 +111,15 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
         jScrollPane6.setViewportView(jTableAlunos);
         if (jTableAlunos.getColumnModel().getColumnCount() > 0) {
             jTableAlunos.getColumnModel().getColumn(0).setResizable(false);
+            jTableAlunos.getColumnModel().getColumn(2).setResizable(false);
         }
 
         jButton4.setText("Adicionar Refeição");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -150,188 +162,6 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Aluno", jPanel1);
 
-        jLabel7.setText("Refeições");
-
-        jTable7.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Nome", "Data"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane7.setViewportView(jTable7);
-        if (jTable7.getColumnModel().getColumnCount() > 0) {
-            jTable7.getColumnModel().getColumn(0).setResizable(false);
-        }
-
-        jLabel8.setText("Alunos");
-
-        jButton5.setText("Excluir Refeição");
-
-        jTable8.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Nome", "Créditos"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane8.setViewportView(jTable8);
-        if (jTable8.getColumnModel().getColumnCount() > 0) {
-            jTable8.getColumnModel().getColumn(0).setResizable(false);
-        }
-
-        jButton6.setText("Adicionar Refeição");
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 558, Short.MAX_VALUE)
-                    .addComponent(jScrollPane7)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel8))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton5, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton6, javax.swing.GroupLayout.Alignment.TRAILING))))
-                .addContainerGap())
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(11, 11, 11)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton5)
-                .addGap(11, 11, 11)
-                .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton6)
-                .addContainerGap(53, Short.MAX_VALUE))
-        );
-
-        jTabbedPane1.addTab("Visitante", jPanel2);
-
-        jLabel9.setText("Refeições");
-
-        jTable9.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Nome", "Data"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane9.setViewportView(jTable9);
-        if (jTable9.getColumnModel().getColumnCount() > 0) {
-            jTable9.getColumnModel().getColumn(0).setResizable(false);
-        }
-
-        jLabel10.setText("Alunos");
-
-        jButton7.setText("Excluir Refeição");
-
-        jTable10.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Nome", "Créditos"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane10.setViewportView(jTable10);
-        if (jTable10.getColumnModel().getColumnCount() > 0) {
-            jTable10.getColumnModel().getColumn(0).setResizable(false);
-        }
-
-        jButton8.setText("Adicionar Refeição");
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 558, Short.MAX_VALUE)
-                    .addComponent(jScrollPane9)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel9)
-                            .addComponent(jLabel10))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton7, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton8, javax.swing.GroupLayout.Alignment.TRAILING))))
-                .addContainerGap())
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(11, 11, 11)
-                .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton7)
-                .addGap(11, 11, 11)
-                .addComponent(jLabel10)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton8)
-                .addContainerGap(53, Short.MAX_VALUE))
-        );
-
-        jTabbedPane1.addTab("Servidor", jPanel3);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -346,6 +176,121 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        if(jTableAlunos.getSelectedRow() != -1){    
+            Refeicao refeicao = new Refeicao();
+            RefeicaoDAO rDao = new RefeicaoDAO();
+            AlunoController ac = new AlunoController();
+            int id;
+
+            ArrayList<Refeicao> listRefeicao = new ArrayList();
+            try {
+                listRefeicao = rDao.getListRefeicao();
+            } catch (IOException ex) {
+                Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            if(listRefeicao.size() != 0) {
+                id = listRefeicao.get(listRefeicao.size()-1).getId()+1;
+            } else {
+                id = 0;
+            }
+
+            int idUsuario = Integer.parseInt(jTableAlunos.getModel().getValueAt(jTableAlunos.getSelectedRow(), 0).toString());
+            refeicao.setId(id);
+            refeicao.setIdUsuario(idUsuario);
+            refeicao.setData(LocalDateTime.now());
+
+            rDao.insertRefeicao(refeicao, true);
+
+            AlunoDAO aDao = new AlunoDAO();
+            try {
+                ac.updateCredito(1, 0, aDao.getAlunoById(idUsuario));
+            } catch (IOException ex) {
+                Logger.getLogger(GUI_Refeicoes.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            try {
+                startTableRefeicao();
+            } catch (IOException ex) {
+                Logger.getLogger(GUI_Refeicoes.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            try {
+                startTableAlunos();
+            } catch (IOException ex) {
+                Logger.getLogger(GUI_Refeicoes.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Selecione uma linha da tabela");
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        if(jTableRefeicao.getSelectedRow() != -1){
+            int id = Integer.parseInt(jTableRefeicao.getModel().getValueAt(jTableRefeicao.getSelectedRow(), 0).toString());
+
+            RefeicaoDAO rDao = new RefeicaoDAO();
+            try {
+                rDao.deleteRefeicao(id);
+            } catch (IOException ex) {
+                Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                startTableRefeicao();
+            } catch (IOException ex) {
+                Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Selecione uma linha da tabela");
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+    
+    
+    public void startTableAlunos() throws IOException {
+        table = (DefaultTableModel) jTableAlunos.getModel();
+        table.setRowCount(0);
+        
+        AlunoDAO aDao = new AlunoDAO();
+        ArrayList<Aluno> listAluno = aDao.getListAluno();
+
+        for(int posicaoLinha=0; posicaoLinha<listAluno.size(); posicaoLinha++){
+            Aluno a = new Aluno();
+            
+            a.setId(listAluno.get(posicaoLinha).getId());
+            a.setNome(listAluno.get(posicaoLinha).getNome());
+            a.setRa(listAluno.get(posicaoLinha).getRa());
+            a.setSenha(listAluno.get(posicaoLinha).getSenha());
+            a.setQtdCreditos(listAluno.get(posicaoLinha).getQtdCreditos());
+            
+            table.insertRow(posicaoLinha, new Object[]{a.getId(), a.getNome(),a.getQtdCreditos()});
+        }
+    }
+    
+    public void startTableRefeicao() throws IOException {
+        table2 = (DefaultTableModel) jTableRefeicao.getModel();
+        table2.setRowCount(0);
+        
+        RefeicaoDAO rDao = new RefeicaoDAO();
+        AlunoDAO aDao = new AlunoDAO();
+        
+        ArrayList<Refeicao> listRefeicao = rDao.getListRefeicao();
+
+        for(int posicaoLinha=0; posicaoLinha<listRefeicao.size(); posicaoLinha++){
+            Refeicao r = new Refeicao();
+            Aluno a = new Aluno();
+            
+            r.setId(listRefeicao.get(posicaoLinha).getId());
+            r.setIdUsuario(listRefeicao.get(posicaoLinha).getIdUsuario());
+            r.setData(listRefeicao.get(posicaoLinha).getData());
+            
+            a = aDao.getAlunoById(listRefeicao.get(posicaoLinha).getIdUsuario());
+            
+            System.out.println("Funciona");
+            
+            table2.insertRow(posicaoLinha, new Object[]{r.getId(), a.getNome(), r.getData().toString()});
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -376,7 +321,11 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new GUI_Refeicoes().setVisible(true);
+                try {
+                    new GUI_Refeicoes().setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(GUI_Refeicoes.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -384,30 +333,12 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JScrollPane jScrollPane8;
-    private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable10;
-    private javax.swing.JTable jTable7;
-    private javax.swing.JTable jTable8;
-    private javax.swing.JTable jTable9;
     private javax.swing.JTable jTableAlunos;
     private javax.swing.JTable jTableRefeicao;
     // End of variables declaration//GEN-END:variables
