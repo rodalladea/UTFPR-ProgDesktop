@@ -5,6 +5,7 @@
  */
 package control;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,7 +18,7 @@ import view.GUI_Creditos;
  * @author rodrigo
  */
 public class AlunoController {
-    public void updateCredito(int creditosNovo, int decisao, Aluno aluno) {
+    public void updateCredito(int creditosNovo, int decisao, Aluno aluno) throws FileNotFoundException, ClassNotFoundException {
         if(decisao == 1) {
             aluno.setQtdCreditos(aluno.getQtdCreditos() + creditosNovo);
         } else { 

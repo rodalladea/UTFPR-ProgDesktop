@@ -5,13 +5,16 @@
  */
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author rodrigo
  */
-public class Aluno extends Usuario {
+public class Aluno extends Usuario implements Serializable {
+    private static final long serialVersionUID = 2L;
+    
     private String ra;
 
     public String getRa() {

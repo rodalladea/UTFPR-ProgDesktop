@@ -6,6 +6,7 @@
 package model;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -16,72 +17,37 @@ import java.util.ArrayList;
  * @author rodrigo
  */
 public class RefeicaoDAO {
-    public void insertRefeicao(Refeicao refeicao, boolean escreve) {
+    public void insertRefeicao(Refeicao refeicao, boolean escreve) throws IOException {
         
         String dir = "/home/rodrigo/Documentos/RU2.0/";
-        String arq = "refeicao.txt";
-        StringBuilder stringDado = new StringBuilder();
+        String arq = "refeicao.obj";
         
         File arquivo = Arquivo.getArquivo(dir, arq);
         
-        stringDado.append(refeicao.getId())
-                .append(",")
-                .append(refeicao.getIdUsuario())
-                .append(",")
-                .append(refeicao.getData().toString());
-        
-        Arquivo.setTexto(new File(dir), arquivo, stringDado.toString(), escreve);
+        Arquivo.setObj(arquivo, refeicao, escreve);
     }
     
-    public ArrayList<Refeicao> getListRefeicao() throws IOException {
+    public ArrayList<Refeicao> getListRefeicao() throws IOException, FileNotFoundException, ClassNotFoundException {
         String dir = "/home/rodrigo/Documentos/RU2.0/";
-        String arq = "refeicao.txt";
-        StringBuilder stringDados = new StringBuilder();
-        ArrayList<Refeicao> listRefeicao = new ArrayList<>();
-        Refeicao refeicao = new Refeicao();
-        String stringDado;
-        int aux = 0;
-        
+        String arq = "refeicao.obj";
         File arquivo = Arquivo.getArquivo(dir, arq);
         
-        stringDado = Arquivo.getTexto(arquivo);
-        
-        
-            char[] charDado = stringDado.toCharArray();
-            
-            for(int i = 0; i < charDado.length; i++) {
-                
-                if(aux == 0 && charDado[i] == ',') {
-                    refeicao.setId(Integer.parseInt(stringDados.toString()));
-                    System.out.println(stringDados.toString());
-                    stringDados.delete(0, stringDados.length());
-                    aux++;
-                } else if(aux == 1 && charDado[i] == ',') {
-                    refeicao.setIdUsuario(Integer.parseInt(stringDados.toString()));
-                    System.out.println(stringDados.toString());
-                    stringDados.delete(0, stringDados.length());
-                    aux++;
-                } else if(aux == 2 && charDado[i] == '\n') {
-                    refeicao.setData(LocalDateTime.parse(stringDados.toString().subSequence(0, stringDados.toString().length())));
-                    System.out.println(stringDados.toString());
-                    stringDados.delete(0, stringDados.length());
-                    aux = 0;
-                    listRefeicao.add(refeicao);
-                    refeicao = new Refeicao();
-                }
-                
-                if(charDado[i] != ',' && charDado[i] != '\n') {
-                    stringDados.append(charDado[i]);
-                }
+        if(arquivo.exists()) {
+            ArrayList<Refeicao> listRefeicao = new ArrayList<>();
+
+            for(Object obj : Arquivo.getObj(arquivo)) {
+                listRefeicao.add((Refeicao) obj);
             }
-        
-        
-        return listRefeicao;
+
+            return listRefeicao;
+        } else {
+            return new ArrayList<Refeicao>();
+        }
     }
     
-    public void deleteRefeicao(int id) throws IOException {
+    public void deleteRefeicao(int id) throws IOException, FileNotFoundException, ClassNotFoundException {
         String dir = "/home/rodrigo/Documentos/RU2.0/";
-        String arq = "refeicao.txt";
+        String arq = "refeicao.obj";
         File arquivo = Arquivo.getArquivo(dir, arq);
         ArrayList<Refeicao> listRefeicao = getListRefeicao();
         
@@ -103,7 +69,7 @@ public class RefeicaoDAO {
         }
     }
     
-    public void updateRefeicao(Refeicao refeicao) throws IOException {
+    public void updateRefeicao(Refeicao refeicao) throws IOException, FileNotFoundException, ClassNotFoundException {
         ArrayList<Refeicao> listRefeicao = getListRefeicao();
         
         for(int i = 0; i < listRefeicao.size(); i++) {
@@ -120,7 +86,7 @@ public class RefeicaoDAO {
     }
     
     
-    public Refeicao getRefeicaoById(int id) throws IOException{
+    public Refeicao getRefeicaoById(int id) throws IOException, FileNotFoundException, ClassNotFoundException{
         ArrayList<Refeicao> listRefeicao = this.getListRefeicao();
         
         for(Refeicao refeicao : listRefeicao){

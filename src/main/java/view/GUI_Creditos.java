@@ -6,6 +6,7 @@
 package view;
 
 import control.AlunoController;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -25,7 +26,7 @@ public class GUI_Creditos extends javax.swing.JFrame {
     /**
      * Creates new form CRUD_Creditos
      */
-    public GUI_Creditos() throws IOException {
+    public GUI_Creditos() throws IOException, FileNotFoundException, ClassNotFoundException {
         initComponents();
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         startTable();
@@ -157,7 +158,9 @@ public class GUI_Creditos extends javax.swing.JFrame {
                 startTable();
             } catch (IOException ex) {
                 Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            } catch (ClassNotFoundException ex) {
+               Logger.getLogger(GUI_Creditos.class.getName()).log(Level.SEVERE, null, ex);
+           }
         } else {
             JOptionPane.showMessageDialog(null, "Selecione uma linha da tabela");
         }
@@ -182,6 +185,8 @@ public class GUI_Creditos extends javax.swing.JFrame {
                 startTable();
             } catch (IOException ex) {
                 Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(GUI_Creditos.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             JOptionPane.showMessageDialog(null, "Selecione uma linha da tabela");
@@ -223,28 +228,32 @@ public class GUI_Creditos extends javax.swing.JFrame {
                     new GUI_Creditos().setVisible(true);
                 } catch (IOException ex) {
                     Logger.getLogger(GUI_Creditos.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(GUI_Creditos.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
     }
     
-    private void startTable() throws IOException {
-        table = (DefaultTableModel) jTableAluno.getModel();
-        table.setRowCount(0);
-        
+    private void startTable() throws IOException, FileNotFoundException, FileNotFoundException, ClassNotFoundException {
         AlunoDAO aDao = new AlunoDAO();
         this.listAluno = aDao.getListAluno();
+        
+        if(this.listAluno != null) {  
+            table = (DefaultTableModel) jTableAluno.getModel();
+            table.setRowCount(0);
 
-        for(int posicaoLinha=0; posicaoLinha<listAluno.size(); posicaoLinha++){
-            Aluno a = new Aluno();
-            
-            a.setId(listAluno.get(posicaoLinha).getId());
-            a.setNome(listAluno.get(posicaoLinha).getNome());
-            a.setRa(listAluno.get(posicaoLinha).getRa());
-            a.setSenha(listAluno.get(posicaoLinha).getSenha());
-            a.setQtdCreditos(listAluno.get(posicaoLinha).getQtdCreditos());
-            
-            table.insertRow(posicaoLinha, new Object[]{ a.getNome(),a.getQtdCreditos()});
+            for(int posicaoLinha=0; posicaoLinha<listAluno.size(); posicaoLinha++){
+                Aluno a = new Aluno();
+
+                a.setId(listAluno.get(posicaoLinha).getId());
+                a.setNome(listAluno.get(posicaoLinha).getNome());
+                a.setRa(listAluno.get(posicaoLinha).getRa());
+                a.setSenha(listAluno.get(posicaoLinha).getSenha());
+                a.setQtdCreditos(listAluno.get(posicaoLinha).getQtdCreditos());
+
+                table.insertRow(posicaoLinha, new Object[]{ a.getNome(),a.getQtdCreditos()});
+            }
         }
     }
 

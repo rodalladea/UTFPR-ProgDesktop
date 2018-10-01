@@ -5,13 +5,16 @@
  */
 package model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  *
  * @author rodrigo
  */
-public class Refeicao {
+public class Refeicao implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private int id;
     private int idUsuario;
     private LocalDateTime data;

@@ -5,11 +5,15 @@
  */
 package model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author rodrigo
  */
-public class Usuario {
+public class Usuario implements Serializable {
+    private static final long serialVersionUID = 2L;
+    
     private int id;
     private String nome;
     private String senha;

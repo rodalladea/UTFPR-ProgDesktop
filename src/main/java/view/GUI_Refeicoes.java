@@ -6,6 +6,7 @@
 package view;
 
 import control.AlunoController;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
     /**
      * Creates new form GUI_Refeicoes
      */
-    public GUI_Refeicoes() throws IOException {
+    public GUI_Refeicoes() throws IOException, FileNotFoundException, ClassNotFoundException {
         initComponents();
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         startTableRefeicao();
@@ -181,19 +182,23 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
             Refeicao refeicao = new Refeicao();
             RefeicaoDAO rDao = new RefeicaoDAO();
             AlunoController ac = new AlunoController();
-            int id;
+            int id = 0;
 
             ArrayList<Refeicao> listRefeicao = new ArrayList();
             try {
                 listRefeicao = rDao.getListRefeicao();
             } catch (IOException ex) {
                 Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(GUI_Refeicoes.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-            if(listRefeicao.size() != 0) {
-                id = listRefeicao.get(listRefeicao.size()-1).getId()+1;
-            } else {
-                id = 0;
+            
+            if(listRefeicao != null) {
+                if(listRefeicao.size() != 0) {
+                    id = listRefeicao.get(listRefeicao.size()-1).getId()+1;
+                } else {
+                    id = 0;
+                }
             }
 
             int idUsuario = Integer.parseInt(jTableAlunos.getModel().getValueAt(jTableAlunos.getSelectedRow(), 0).toString());
@@ -201,12 +206,18 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
             refeicao.setIdUsuario(idUsuario);
             refeicao.setData(LocalDateTime.now());
 
-            rDao.insertRefeicao(refeicao, true);
+            try {
+                rDao.insertRefeicao(refeicao, true);
+            } catch (IOException ex) {
+                Logger.getLogger(GUI_Refeicoes.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
             AlunoDAO aDao = new AlunoDAO();
             try {
                 ac.updateCredito(1, 0, aDao.getAlunoById(idUsuario));
             } catch (IOException ex) {
+                Logger.getLogger(GUI_Refeicoes.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
                 Logger.getLogger(GUI_Refeicoes.class.getName()).log(Level.SEVERE, null, ex);
             }
 
@@ -214,11 +225,15 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
                 startTableRefeicao();
             } catch (IOException ex) {
                 Logger.getLogger(GUI_Refeicoes.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(GUI_Refeicoes.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             try {
                 startTableAlunos();
             } catch (IOException ex) {
+                Logger.getLogger(GUI_Refeicoes.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
                 Logger.getLogger(GUI_Refeicoes.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
@@ -235,11 +250,15 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
                 rDao.deleteRefeicao(id);
             } catch (IOException ex) {
                 Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(GUI_Refeicoes.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
                 startTableRefeicao();
             } catch (IOException ex) {
                 Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(GUI_Refeicoes.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             JOptionPane.showMessageDialog(null, "Selecione uma linha da tabela");
@@ -247,27 +266,29 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
     
     
-    public void startTableAlunos() throws IOException {
-        table = (DefaultTableModel) jTableAlunos.getModel();
-        table.setRowCount(0);
-        
+    public void startTableAlunos() throws IOException, FileNotFoundException, ClassNotFoundException {
         AlunoDAO aDao = new AlunoDAO();
         ArrayList<Aluno> listAluno = aDao.getListAluno();
+        
+        if(listAluno != null) {
+            table = (DefaultTableModel) jTableAlunos.getModel();
+            table.setRowCount(0);
 
-        for(int posicaoLinha=0; posicaoLinha<listAluno.size(); posicaoLinha++){
-            Aluno a = new Aluno();
-            
-            a.setId(listAluno.get(posicaoLinha).getId());
-            a.setNome(listAluno.get(posicaoLinha).getNome());
-            a.setRa(listAluno.get(posicaoLinha).getRa());
-            a.setSenha(listAluno.get(posicaoLinha).getSenha());
-            a.setQtdCreditos(listAluno.get(posicaoLinha).getQtdCreditos());
-            
-            table.insertRow(posicaoLinha, new Object[]{a.getId(), a.getNome(),a.getQtdCreditos()});
+            for(int posicaoLinha=0; posicaoLinha<listAluno.size(); posicaoLinha++){
+                Aluno a = new Aluno();
+
+                a.setId(listAluno.get(posicaoLinha).getId());
+                a.setNome(listAluno.get(posicaoLinha).getNome());
+                a.setRa(listAluno.get(posicaoLinha).getRa());
+                a.setSenha(listAluno.get(posicaoLinha).getSenha());
+                a.setQtdCreditos(listAluno.get(posicaoLinha).getQtdCreditos());
+
+                table.insertRow(posicaoLinha, new Object[]{a.getId(), a.getNome(),a.getQtdCreditos()});
+            }
         }
     }
     
-    public void startTableRefeicao() throws IOException {
+    public void startTableRefeicao() throws IOException, FileNotFoundException, ClassNotFoundException {
         table2 = (DefaultTableModel) jTableRefeicao.getModel();
         table2.setRowCount(0);
         
@@ -275,21 +296,22 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
         AlunoDAO aDao = new AlunoDAO();
         
         ArrayList<Refeicao> listRefeicao = rDao.getListRefeicao();
+        
+        if(listRefeicao != null)
+            for(int posicaoLinha=0; posicaoLinha<listRefeicao.size(); posicaoLinha++){
+                Refeicao r = new Refeicao();
+                Aluno a = new Aluno();
 
-        for(int posicaoLinha=0; posicaoLinha<listRefeicao.size(); posicaoLinha++){
-            Refeicao r = new Refeicao();
-            Aluno a = new Aluno();
-            
-            r.setId(listRefeicao.get(posicaoLinha).getId());
-            r.setIdUsuario(listRefeicao.get(posicaoLinha).getIdUsuario());
-            r.setData(listRefeicao.get(posicaoLinha).getData());
-            
-            a = aDao.getAlunoById(listRefeicao.get(posicaoLinha).getIdUsuario());
-            
-            System.out.println("Funciona");
-            
-            table2.insertRow(posicaoLinha, new Object[]{r.getId(), a.getNome(), r.getData().toString()});
-        }
+                r.setId(listRefeicao.get(posicaoLinha).getId());
+                r.setIdUsuario(listRefeicao.get(posicaoLinha).getIdUsuario());
+                r.setData(listRefeicao.get(posicaoLinha).getData());
+
+                a = aDao.getAlunoById(listRefeicao.get(posicaoLinha).getIdUsuario());
+
+                System.out.println("Funciona");
+
+                table2.insertRow(posicaoLinha, new Object[]{r.getId(), a.getNome(), r.getData().toString()});
+            }
     }
     /**
      * @param args the command line arguments
@@ -324,6 +346,8 @@ public class GUI_Refeicoes extends javax.swing.JFrame {
                 try {
                     new GUI_Refeicoes().setVisible(true);
                 } catch (IOException ex) {
+                    Logger.getLogger(GUI_Refeicoes.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
                     Logger.getLogger(GUI_Refeicoes.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

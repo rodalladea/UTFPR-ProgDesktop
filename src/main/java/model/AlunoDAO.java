@@ -7,6 +7,7 @@ package model;
 
 import java.awt.List;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -17,86 +18,37 @@ import javax.swing.JOptionPane;
  * @author Renan Rodrigues
  */
 public class AlunoDAO {
-    public void insertAluno(Aluno aluno, boolean escreve) {
+    public void insertAluno(Aluno aluno, boolean escreve) throws IOException {
         
         String dir = "/home/rodrigo/Documentos/RU2.0/";
-        String arq = "aluno.txt";
-        StringBuilder stringDado = new StringBuilder();
+        String arq = "aluno.obj";
         
         File arquivo = Arquivo.getArquivo(dir, arq);
         
-        stringDado.append(aluno.getId())
-                .append(",")
-                .append(aluno.getNome())
-                .append(",")
-                .append(aluno.getRa())
-                .append(",")
-                .append(aluno.getSenha())
-                .append(",")
-                .append(aluno.getQtdCreditos());
-        
-        Arquivo.setTexto(new File(dir), arquivo, stringDado.toString(), escreve);
+        Arquivo.setObj(arquivo, aluno, escreve);
     }
     
-    public ArrayList<Aluno> getListAluno() throws IOException {
+    public ArrayList<Aluno> getListAluno() throws IOException, FileNotFoundException, ClassNotFoundException {
         String dir = "/home/rodrigo/Documentos/RU2.0/";
-        String arq = "aluno.txt";
-        StringBuilder stringDados = new StringBuilder();
-        ArrayList<Aluno> listAluno = new ArrayList<>();
-        Aluno aluno = new Aluno();
-        String stringDado;
-        int aux = 0;
-        
+        String arq = "aluno.obj";
         File arquivo = Arquivo.getArquivo(dir, arq);
         
-        stringDado = Arquivo.getTexto(arquivo);
-        
-        
-            char[] charDado = stringDado.toCharArray();
-            
-            for(int i = 0; i < charDado.length; i++) {
-                
-                if(aux == 0 && charDado[i] == ',') {
-                    aluno.setId(Integer.parseInt(stringDados.toString()));
-                    
-                    stringDados.delete(0, stringDados.length());
-                    aux++;
-                } else if(aux == 1 && charDado[i] == ',') {
-                    aluno.setNome(stringDados.toString());
-                    
-                    stringDados.delete(0, stringDados.length());
-                    aux++;
-                } else if(aux == 2 && charDado[i] == ',') {
-                    aluno.setRa(stringDados.toString());
-                    
-                    stringDados.delete(0, stringDados.length());
-                    aux++;
-                } else if(aux == 3 && charDado[i] == ',') {
-                    aluno.setSenha(stringDados.toString());
-                    
-                    stringDados.delete(0, stringDados.length());
-                    aux++;
-                } else if(aux == 4 && charDado[i] == '\n') {
-                    aluno.setQtdCreditos(Integer.parseInt(stringDados.toString()));
-                    
-                    stringDados.delete(0, stringDados.length());
-                    aux = 0;
-                    listAluno.add(aluno);
-                    aluno = new Aluno();
-                }
-                
-                if(charDado[i] != ',' && charDado[i] != '\n') {
-                    stringDados.append(charDado[i]);
-                }
+        if(arquivo.exists()) {
+            ArrayList<Aluno> listAluno = new ArrayList<>();
+
+            for(Object obj : Arquivo.getObj(arquivo)) {
+                listAluno.add((Aluno) obj);
             }
-        
-        
-        return listAluno;
+
+            return listAluno;
+        } else {
+            return new ArrayList<Aluno>();
+        }
     }
     
-    public void deleteAluno(int id) throws IOException {
+    public void deleteAluno(int id) throws IOException, FileNotFoundException, ClassNotFoundException {
         String dir = "/home/rodrigo/Documentos/RU2.0/";
-        String arq = "aluno.txt";
+        String arq = "aluno.obj";
         File arquivo = Arquivo.getArquivo(dir, arq);
         ArrayList<Aluno> listAluno = getListAluno();
         
@@ -118,7 +70,7 @@ public class AlunoDAO {
         }
     }
     
-    public void updateAluno(Aluno aluno) throws IOException {
+    public void updateAluno(Aluno aluno) throws IOException, FileNotFoundException, ClassNotFoundException {
         ArrayList<Aluno> listAluno = getListAluno();
         
         for(int i = 0; i < listAluno.size(); i++) {
@@ -135,7 +87,7 @@ public class AlunoDAO {
     }
     
     
-    public Aluno getAlunoById(int id) throws IOException{
+    public Aluno getAlunoById(int id) throws IOException, FileNotFoundException, ClassNotFoundException{
         ArrayList<Aluno> alunos = this.getListAluno();
         
         for(Aluno aluno : alunos){

@@ -5,6 +5,7 @@
  */
 package view;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -24,7 +25,7 @@ public class GUI_Usuario extends javax.swing.JFrame {
     /**
      * Creates new form CRUD_Aluno
      */
-    public GUI_Usuario() throws IOException {
+    public GUI_Usuario() throws IOException, FileNotFoundException, ClassNotFoundException {
         initComponents();
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         startTable();
@@ -194,11 +195,15 @@ public class GUI_Usuario extends javax.swing.JFrame {
             aDao.updateAluno(aluno);
         } catch (IOException ex) {
             Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         try {
             startTable();
         } catch (IOException ex) {
+            Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton6ActionPerformed
@@ -212,10 +217,14 @@ public class GUI_Usuario extends javax.swing.JFrame {
                 aDao.deleteAluno(id);
             } catch (IOException ex) {
                 Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
                 startTable();
             } catch (IOException ex) {
+                Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
                 Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
@@ -237,31 +246,39 @@ public class GUI_Usuario extends javax.swing.JFrame {
             listAluno = aDao.getListAluno();
         } catch (IOException ex) {
             Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        for(int i = 0; i < listAluno.size(); i++) {
-            if(id == listAluno.get(i).getId()) {
-                jTextFieldSenhaAluno.setText(listAluno.get(i).getSenha());
-                break;
+        
+        if(listAluno != null) {
+            for(int i = 0; i < listAluno.size(); i++) {
+                if(id == listAluno.get(i).getId()) {
+                    jTextFieldSenhaAluno.setText(listAluno.get(i).getSenha());
+                    break;
+                }
             }
         }
     }//GEN-LAST:event_jTableAlunoMouseClicked
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         Aluno aluno = new Aluno();
-        int idAdd;
+        int idAdd = 0;
         AlunoDAO alunoDao = new AlunoDAO();
         ArrayList<Aluno> listAluno = new ArrayList();
         try {
             listAluno = alunoDao.getListAluno();
         } catch (IOException ex) {
             Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        if(listAluno.size() != 0) {
-            idAdd = listAluno.get(listAluno.size()-1).getId()+1;
-        } else {
-            idAdd = 0;
+        
+        if(listAluno != null) {
+            if(listAluno.size() != 0) {
+                idAdd = listAluno.get(listAluno.size()-1).getId()+1;
+            } else {
+                idAdd = 0;
+            }
         }
 
         aluno.setId(idAdd);
@@ -270,31 +287,39 @@ public class GUI_Usuario extends javax.swing.JFrame {
         aluno.setSenha(jTextFieldSenhaAluno.getText());
         aluno.setQtdCreditos(0);
 
-        alunoDao.insertAluno(aluno, true);
+        try {
+            alunoDao.insertAluno(aluno, true);
+        } catch (IOException ex) {
+            Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
         try {
             startTable();
         } catch (IOException ex) {
             Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton4ActionPerformed
     
-    private void startTable() throws IOException {
-        table = (DefaultTableModel) jTableAluno.getModel();
-        table.setRowCount(0);
-        
+    private void startTable() throws IOException, FileNotFoundException, ClassNotFoundException {
         AlunoDAO aDao = new AlunoDAO();
         ArrayList<Aluno> listAluno = aDao.getListAluno();
+        
+        if(listAluno != null) {
+            table = (DefaultTableModel) jTableAluno.getModel();
+            table.setRowCount(0);
 
-        for(int posicaoLinha=0; posicaoLinha<listAluno.size(); posicaoLinha++){
-            Aluno a = new Aluno();
-            
-            a.setId(listAluno.get(posicaoLinha).getId());
-            a.setNome(listAluno.get(posicaoLinha).getNome());
-            a.setRa(listAluno.get(posicaoLinha).getRa());
-            a.setSenha(listAluno.get(posicaoLinha).getSenha());
-            a.setQtdCreditos(listAluno.get(posicaoLinha).getQtdCreditos());
-            
-            table.insertRow(posicaoLinha, new Object[]{a.getId(), a.getNome(),a.getRa()});
+            for(int posicaoLinha=0; posicaoLinha<listAluno.size(); posicaoLinha++){
+                Aluno a = new Aluno();
+
+                a.setId(listAluno.get(posicaoLinha).getId());
+                a.setNome(listAluno.get(posicaoLinha).getNome());
+                a.setRa(listAluno.get(posicaoLinha).getRa());
+                a.setSenha(listAluno.get(posicaoLinha).getSenha());
+                a.setQtdCreditos(listAluno.get(posicaoLinha).getQtdCreditos());
+
+                table.insertRow(posicaoLinha, new Object[]{a.getId(), a.getNome(),a.getRa()});
+            }
         }
     }
     /**
@@ -337,6 +362,8 @@ public class GUI_Usuario extends javax.swing.JFrame {
                 try {
                     new GUI_Usuario().setVisible(true);
                 } catch (IOException ex) {
+                    Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
                     Logger.getLogger(GUI_Usuario.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

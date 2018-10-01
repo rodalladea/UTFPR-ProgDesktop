@@ -5,6 +5,7 @@
  */
 package view;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import static java.lang.System.exit;
 import java.util.logging.Level;
@@ -107,6 +108,8 @@ public class Main extends javax.swing.JFrame {
             new GUI_Creditos().setVisible(true);
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -115,6 +118,8 @@ public class Main extends javax.swing.JFrame {
             new GUI_Refeicoes().setVisible(true);
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -122,6 +127,8 @@ public class Main extends javax.swing.JFrame {
         try {
             new GUI_Usuario().setVisible(true);
         } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton3ActionPerformed
